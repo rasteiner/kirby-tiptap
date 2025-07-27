@@ -25,6 +25,19 @@ Kirby::plugin('medienbaecker/tiptap', [
 	],
 	'snippets' => [
 		'blocks/tiptap' => __DIR__ . '/snippets/blocks/tiptap.php',
+		// Nodes
+		'tiptap/doc' => __DIR__ . '/snippets/tiptap/doc.php',
+		'tiptap/heading' => __DIR__ . '/snippets/tiptap/heading.php',
+		'tiptap/paragraph' => __DIR__ . '/snippets/tiptap/paragraph.php',
+		'tiptap/bulletList' => __DIR__ . '/snippets/tiptap/bulletList.php',
+		'tiptap/orderedList' => __DIR__ . '/snippets/tiptap/orderedList.php',
+		'tiptap/listItem' => __DIR__ . '/snippets/tiptap/listItem.php',
+		'tiptap/kirbyTag' => __DIR__ . '/snippets/tiptap/kirbyTag.php',
+		'tiptap/text' => __DIR__ . '/snippets/tiptap/text.php',
+		'tiptap/hardBreak' => __DIR__ . '/snippets/tiptap/hardBreak.php',
+		// Marks
+		'tiptap/bold' => __DIR__ . '/snippets/tiptap/bold.php',
+		'tiptap/italic' => __DIR__ . '/snippets/tiptap/italic.php',
 	],
 	'fields' => [
 		'tiptap' => [

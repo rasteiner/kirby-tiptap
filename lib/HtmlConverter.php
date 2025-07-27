@@ -13,6 +13,29 @@ use Medienbaecker\Tiptap\Extensions\CustomAttributes;
  */
 class HtmlConverter
 {
+	protected static function snippet(array $content, ?array $parent = null): string {
+		$str = '';
+		$previous = null;
+
+		for ($i = 0, $l = count($content); $i < $l; $i++) {
+			$block = $content[$i];
+
+			$children = self::snippet($block['content'] ?? [], $block);
+
+			$str .= snippet("tiptap/{$block['type']}", [
+				...$block,
+				'content' => $children,
+				'next' => $content[$i + 1] ?? null,
+				'previous' => $previous,
+				'parent' => $parent,
+			], return: true);
+
+			$previous = $block;
+		}
+
+		return $str;
+	}
+
 	/**
 	 * Convert Tiptap JSON to HTML
 	 * @param mixed $json Tiptap JSON content
@@ -76,6 +99,17 @@ class HtmlConverter
 
 		// Convert to HTML
 		try {
+
+			$dom = (new MarkProcessor)->processNode($json);
+
+			/*
+			// the dirtiest debugging ever:
+			echo "<pre>" . html(json_encode($dom, JSON_PRETTY_PRINT)) . "</pre>";
+			*/
+
+			$html = self::snippet([$dom]);
+
+			/*
 			$extensions = [
 				new \Tiptap\Extensions\StarterKit([
 					'text' => false, // Disable default text node
@@ -92,13 +126,20 @@ class HtmlConverter
 				'extensions' => $extensions
 			]))->setContent($json)->getHTML();
 
+			*/
 			// Handle Smartypants
 			if (option('smartypants', false) !== false) {
 				$html = smartypants($html);
 			}
 
 			return $html;
-		} catch (\Exception) {
+		} catch (\Exception $err) {
+			/*
+			// More debugging
+			if (option('debug', false)) {
+				return 'Tiptap conversion error: ' . $err->getMessage() . ' in ' . $err->getFile() . ':' . $err->getLine();
+			}
+			*/
 			return '';
 		}
 	}
